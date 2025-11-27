@@ -5,4 +5,4 @@ CSR1kv ansible_host=192.168.56.101 ansible_user=cisco ansible_password=cisco123!
 CSR1kv ansible_host=192.168.56.101 ansible_user=cisco ansible_password=cisco123! enable_password=cisco123! ansible_network_os=ios
 
 [webservers]
-192.0.2.3 ansible_ssh_user=devasc ansible_ssh_pass=Cisco123!
+192.168.56.10 ansible_ssh_user=devasc ansible_ssh_pass=Cisco123!
