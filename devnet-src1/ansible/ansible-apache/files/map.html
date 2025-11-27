@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Map Page</title>
+
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #map { height: 500px; width: 100%; margin-top: 10px; }
+        a { font-size: 18px; }
+    </style>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+</head>
+<body>
+
+<h2>Your current location (via OpenStreetMap)</h2>
+
+<div id="map"></div>
+
+<br>
+<a href="index.html">Back to Home</a>
+
+<script>
+    // Start met een default locatie (Brussel)
+    var defaultLatLng = [50.8503, 4.3517];
+    var map = L.map('map').setView(defaultLatLng, 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+    }).addTo(map);
+
+    // Toon standaard een marker in Brussel
+    var marker = L.marker(defaultLatLng).addTo(map)
+        .bindPopup("Default location (Brussels)").openPopup();
+
+    // Probeer echte locatie te gebruiken als de browser het toestaat
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(pos) {
+                var latlng = [pos.coords.latitude, pos.coords.longitude];
+                map.setView(latlng, 15);
+                marker.setLatLng(latlng).setPopupContent("Your current location");
+            },
+            function(err) {
+                // Geen alert meer, we laten gewoon de default map staan
+                console.log("Geolocation blocked or unavailable:", err.message);
+            }
+        );
+    }
+</script>
+
+</body>
+</html>

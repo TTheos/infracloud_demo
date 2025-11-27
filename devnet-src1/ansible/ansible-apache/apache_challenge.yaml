@@ -1,0 +1,51 @@
+---
+- hosts: webservers
+  become: yes
+
+  tasks:
+
+    - name: Install Apache2
+      apt:
+        name: apache2
+        state: latest
+        update_cache: yes
+
+    - name: Enable mod_rewrite
+      apache2_module:
+        name: rewrite
+        state: present
+      notify: Restart Apache2
+
+    - name: Ensure Apache listens on port 8088
+      lineinfile:
+        path: /etc/apache2/ports.conf
+        regexp: '^Listen '
+        line: 'Listen 8088'
+      notify: Restart Apache2
+
+    - name: Update VirtualHost to listen on port 8088
+      lineinfile:
+        path: /etc/apache2/sites-available/000-default.conf
+        regexp: '^<VirtualHost'
+        line: '<VirtualHost *:8088>'
+      notify: Restart Apache2
+
+    - name: Template homepage
+      template:
+        src: files/index.j2
+        dest: /var/www/html/index.html
+        mode: '0644'
+
+    - name: Copy mappage (map.html)
+      copy:
+        src: files/map.html
+        dest: /var/www/html/map.html
+        owner: www-data
+        group: www-data
+        mode: '0644'
+
+  handlers:
+    - name: Restart Apache2
+      service:
+        name: apache2
+        state: restarted

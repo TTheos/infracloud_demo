@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home Page</title>
+</head>
+<body>
+    <h1>Developed by Theos</h1>
+
+    <h3>Your IP Address:</h3>
+    <p>{{ ansible_default_ipv4.address }}</p>
+
+    <h3>Current Date and Time:</h3>
+    <p>{{ ansible_date_time.date }} {{ ansible_date_time.time }}</p>
+
+    <h3>Go to Map Page:</h3>
+    <a href="map.html">Click here to view your location</a>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+         alt="logo" width="150">
+</body>
+</html>

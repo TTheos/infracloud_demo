@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .logo { width: 140px; margin-top: 10px; }
+        .clock { font-size: 22px; font-weight: bold; margin-top: 5px; }
+        a { font-size: 18px; }
+    </style>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            let h = now.getHours().toString().padStart(2, '0');
+            let m = now.getMinutes().toString().padStart(2, '0');
+            let s = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById("clock").innerHTML = `${h}:${m}:${s}`;
+        }
+        setInterval(updateClock, 1000);
+        window.onload = updateClock;
+    </script>
+
+</head>
+<body>
+
+<h2>Developed by Theos</h2>
+
+<h3>Your IP Address:</h3>
+<p>{{ ansible_default_ipv4.address }}</p>
+
+<h3>Current Date and Time:</h3>
+<p id="liveDateTime"></p>
+
+<script>
+function updateDateTime() {
+    const now = new Date();
+    document.getElementById("liveDateTime").innerHTML =
+        now.toLocaleDateString() + " " + now.toLocaleTimeString();
+}
+setInterval(updateDateTime, 1000);
+updateDateTime();
+</script>
+
+
+<h3>Go to Map Page:</h3>
+<a href="map.html">Click here to view your location</a>
+
+<br><br>
+
+<img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">
+
+</body>
+</html>
