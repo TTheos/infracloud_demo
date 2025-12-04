@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>Sample App: Theos Tungu</title>
+    <link rel="stylesheet" href="../static/style.css" />
+</head>
+<body>
+    <h1>Called via IP Gateway: {{ request.remote_addr }}</h1>
+    <h2>Current date and time (server): <span id="clock">loading...</span></h2>
+
+    <script>
+        function updateClock() {
+            fetch("/api/time")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("clock").innerText = data.time;
+                })
+                .catch(err => {
+                    console.error("Error fetching time:", err);
+                    document.getElementById("clock").innerText = "Error";
+                });
+        }
+    
+        // Update elke seconde
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
