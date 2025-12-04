@@ -1,53 +1,71 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template
 import requests
 
-app = Flask(__name__)
+weather_brussels = Flask(__name__)
 
-# WeatherAPI key (user's key)
-API_KEY = 'YOUR API KEY 7974a3f19d4c41b08155316242609'
-CURRENT_WEATHER_URL = 'http://api.weatherapi.com/v1/current.json'
-FORECAST_URL = 'http://api.weatherapi.com/v1/forecast.json'
+API_KEY = "680790fd16e648b6902141454250412"
 
-# City for weather data
-CITY = 'Brussels'
+CURRENT_WEATHER_URL = "http://api.weatherapi.com/v1/current.json"
+FORECAST_URL = "http://api.weatherapi.com/v1/forecast.json"
 
-@app.route('/')
-def map_page():
-    return render_template('map.html')
+CITY = "Brussels"
 
-@app.route('/weather')
-def weather_page():
+
+def get_weather():
+    params = {"key": API_KEY, "q": CITY, "aqi": "no"}
+    r = requests.get(CURRENT_WEATHER_URL, params=params)
+    r.raise_for_status()
+    return r.json()
+
+
+def get_forecast():
+    """Veilige forecast-oproep (crasht nooit)."""
     try:
-        # Fetch current weather
-        current_params = {
-            'key': API_KEY,
-            'q': CITY,
-            'aqi': 'no'  # Air Quality Index is optional
+        params = {
+            "key": API_KEY,
+            "q": CITY,
+            "days": 3,
+            "aqi": "no",
+            "alerts": "no"
         }
-        current_response = requests.get(CURRENT_WEATHER_URL, params=current_params)
-        current_response.raise_for_status()
-        current_weather = current_response.json()
+        r = requests.get(FORECAST_URL, params=params)
+        r.raise_for_status()
 
-        # Fetch 3-day weather forecast
-        forecast_params = {
-            'key': API_KEY,
-            'q': CITY,
-            'days': 3,  # Number of days for forecast
-            'aqi': 'no',  # Air Quality Index is optional
-            'alerts': 'no'  # Weather alerts optional
-        }
-        forecast_response = requests.get(FORECAST_URL, params=forecast_params)
-        forecast_response.raise_for_status()
-        forecast_data = forecast_response.json()
+        data = r.json()
 
-        # Extract 3-day forecast
-        daily_forecast = forecast_data['forecast']['forecastday']
+        if "forecast" in data and "forecastday" in data["forecast"]:
+            return data["forecast"]["forecastday"]
 
-        return render_template('weather.html', current=current_weather, daily=daily_forecast)
+        print("⚠️ Forecast ontbreekt:", data)
+        return []
 
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching weather data: {e}")
-        return f"Error fetching weather data: {e}"
+    except Exception as e:
+        print("⚠️ Forecast error:", e)
+        return []
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+@weather_brussels.route("/")
+def map_page():
+    weather = get_weather()
+    return render_template(
+        "map.html",
+        temp=weather["current"]["temp_c"],
+        condition=weather["current"]["condition"]["text"],
+        icon=weather["current"]["condition"]["icon"]
+    )
+
+
+@weather_brussels.route("/weather")
+def weather_page():
+    current = get_weather()
+    daily = get_forecast()
+
+    return render_template(
+        "weather.html",
+        current=current,
+        daily=daily
+    )
+
+
+if __name__ == "__main__":
+    weather_brussels.run(debug=True, host="0.0.0.0", port=5555)

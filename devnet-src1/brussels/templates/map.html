@@ -4,20 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brussels Map</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 </head>
 <body>
-    <div class="background"></div>
-    <div id="map"></div>
-    <button onclick="window.location.href='/weather'">View Weather Forecast</button>
 
-    <script>
-        var map = L.map('map').setView([50.8503, 4.3517], 12); // Brussels coordinates
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-    </script>
+<div class="top-info">
+    <img src="{{ icon }}" class="weather-icon">
+    <p class="weather-text">{{ temp }}°C – {{ condition }}</p>
+</div>
+
+<div id="map"></div>
+
+<button class="btn" onclick="window.location.href='/weather'">View Weather Forecast</button>
+
+<script>
+    var map = L.map('map').setView([50.8503, 4.3517], 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    L.marker([50.8503, 4.3517])
+        .addTo(map)
+        .bindPopup("<b>Brussels</b><br>Current Weather: {{ temp }}°C")
+        .openPopup();
+</script>
+
 </body>
 </html>

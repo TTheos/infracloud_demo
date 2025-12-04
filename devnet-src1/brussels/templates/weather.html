@@ -4,30 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Forecast</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="background"></div>
-    <h1>Weather Forecast for Brussels</h1>
 
-    <h2>Today's Weather:</h2>
-    <p>Temperature: {{ current['current']['temp_c'] }} °C</p>
-    <p>Condition: {{ current['current']['condition']['text'] }}</p>
-    <img src="{{ current['current']['condition']['icon'] }}" alt="weather_icon">
+<h1>Weather Forecast for Brussels</h1>
 
-    <h2>Next 3 Days Forecast:</h2>
-    <ul>
-        {% for day in daily %}
-        <li>
-            <strong>Date: {{ day['date'] }}</strong>
-            <p>Max Temperature: {{ day['day']['maxtemp_c'] }} °C</p>
-            <p>Min Temperature: {{ day['day']['mintemp_c'] }} °C</p>
-            <p>Condition: {{ day['day']['condition']['text'] }}</p>
-            <img src="{{ day['day']['condition']['icon'] }}" alt="weather_icon">
-        </li>
-        {% endfor %}
-    </ul>
+<div class="current-card">
+    <img src="{{ current['current']['condition']['icon'] }}" class="weather-icon">
+    <h2>{{ current['current']['temp_c'] }}°C – {{ current['current']['condition']['text'] }}</h2>
+</div>
 
-    <button onclick="window.location.href='/'">Back to Map</button>
+<h2>Next 3 Days</h2>
+
+<div class="forecast-wrapper">
+    {% for day in daily %}
+    <div class="forecast-card">
+        <h3>{{ day['date'] }}</h3>
+        <img src="{{ day['day']['condition']['icon'] }}" class="weather-icon-small">
+        <p>Max: {{ day['day']['maxtemp_c'] }}°C</p>
+        <p>Min: {{ day['day']['mintemp_c'] }}°C</p>
+        <p>{{ day['day']['condition']['text'] }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<button class="btn" onclick="window.location.href='/'">Back to Map</button>
+
 </body>
 </html>
