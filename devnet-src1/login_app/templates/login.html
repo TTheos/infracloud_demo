@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% set title = "Login v2" %}
+{% block content %}
+<h3 class="mb-3">Login</h3>
+<form method="POST" action="/login/v2">
+  <input class="form-control mb-2" name="username" placeholder="Username" required>
+  <input class="form-control mb-3" name="password" type="password" placeholder="Password" required>
+  <button class="btn btn-success w-100">Login</button>
+</form>
+{% endblock %}

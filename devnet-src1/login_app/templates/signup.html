@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% set title = "Signup v2" %}
+{% block content %}
+<h3 class="mb-3">Signup</h3>
+<form method="POST" action="/signup/v2">
+  <input class="form-control mb-2" name="username" placeholder="Username" required>
+  <input class="form-control mb-3" name="password" type="password" placeholder="Password" required>
+  <button class="btn btn-primary w-100">Create account</button>
+</form>
+{% endblock %}
