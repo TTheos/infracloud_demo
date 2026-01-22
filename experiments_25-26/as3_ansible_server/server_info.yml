@@ -1,0 +1,25 @@
+- name: as3 - simple server experiment
+  hosts: servers
+  gather_facts: yes
+
+  tasks:
+    - name: Create info directory
+      file:
+        path: /tmp/as3_info
+        state: directory
+
+    - name: Write server info
+      copy:
+        dest: /tmp/as3_info/info.txt
+        content: |
+          Hostname: {{ ansible_hostname }}
+          OS: {{ ansible_distribution }} {{ ansible_distribution_version }}
+          Date: {{ ansible_date_time.iso8601 }}
+          Uptime: {{ ansible_uptime_seconds }} seconds
+
+    - name: Show result
+      command: cat /tmp/as3_info/info.txt
+      register: out
+
+    - debug:
+        var: out.stdout
