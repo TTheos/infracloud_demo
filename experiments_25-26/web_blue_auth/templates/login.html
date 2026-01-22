@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% set title = "Login" %}
+{% block content %}
+<div class="wrap">
+  <div class="card">
+    <h1>Login</h1>
+    <form method="post">
+      <p><input name="username" placeholder="username" required></p>
+      <p><input name="password" type="password" placeholder="password" required></p>
+      <p><button type="submit">Login</button></p>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Tip</h2>
+    <p class="small">If login fails: wrong password or user not created yet.</p>
+  </div>
+</div>
+{% endblock %}

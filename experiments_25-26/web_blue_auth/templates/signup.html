@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% set title = "Sign up" %}
+{% block content %}
+<div class="wrap">
+  <div class="card">
+    <h1>Sign up</h1>
+    <p>Creates a user in SQLite with a hashed password and created_at.</p>
+
+    <form method="post">
+      <p><input name="username" placeholder="username (min 3 chars)" required></p>
+      <p><input name="password" type="password" placeholder="password (min 6 chars)" required></p>
+      <p><button type="submit">Create account</button></p>
+    </form>
+
+    <p class="small">Hashing: Werkzeug generate_password_hash()</p>
+  </div>
+
+  <div class="card">
+    <h2>What gets stored</h2>
+    <p><code>username</code>, <code>pass_hash</code>, <code>created_at</code></p>
+    <p class="small">You can inspect with: <code>sqlite3 app.db</code></p>
+  </div>
+</div>
+{% endblock %}

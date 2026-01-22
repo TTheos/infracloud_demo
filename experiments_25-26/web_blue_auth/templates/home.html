@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% set title = "Home" %}
+{% block content %}
+<div class="wrap">
+  <div class="card">
+    <h1>Home</h1>
+    <p>Live date & time (browser):</p>
+    <div class="bigtime" id="clock">loading…</div>
+
+    <h2 style="margin-top:14px;">Current location</h2>
+    <p id="status">Click to locate you.</p>
+    <button id="locateBtn">Show my location</button>
+
+    <p style="margin-top:10px;">Lat/Lng: <code id="latlng">unknown</code></p>
+    <p class="small">Uses browser geolocation + OpenStreetMap tiles. No API key.</p>
+
+    <div style="margin-top:12px;" class="row">
+      <span class="pill">Port: 8080</span>
+      {% if user %}
+      <span class="pill">Logged in: {{ user }}</span>
+      {% else %}
+      <span class="pill">Guest</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Map</h2>
+    <div id="map"></div>
+  </div>
+</div>
+
+<script>
+  function tick(){
+    const now = new Date();
+    document.getElementById("clock").textContent =
+      now.toLocaleDateString() + " " + now.toLocaleTimeString();
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  const map = L.map('map').setView([50.8503, 4.3517], 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+  }).addTo(map);
+
+  let marker = null;
+
+  document.getElementById("locateBtn").addEventListener("click", () => {
+    const status = document.getElementById("status");
+
+    if (!navigator.geolocation) {
+      status.textContent = "Geolocation not supported.";
+      return;
+    }
+
+    status.textContent = "Locating…";
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        document.getElementById("latlng").textContent = lat.toFixed(6) + ", " + lng.toFixed(6);
+        status.textContent = "Location found.";
+
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([lat, lng]).addTo(map).bindPopup("You are here").openPopup();
+        map.setView([lat, lng], 15);
+      },
+      (err) => {
+        status.textContent = "Location blocked/unavailable: " + err.message;
+      },
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  });
+</script>
+{% endblock %}

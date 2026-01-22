@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% set title = "Dashboard" %}
+{% block content %}
+<div class="wrap">
+  <div class="card">
+    <h1>Dashboard</h1>
+    <p>Logged in as: <code>{{ user }}</code></p>
+    <p>Account created at: <code>{{ created_at }}</code></p>
+
+    <h2 style="margin-top:14px;">Live time</h2>
+    <div class="bigtime" id="clock">loading…</div>
+
+    <p class="small">Session-based login. Not production auth.</p>
+  </div>
+
+  <div class="card">
+    <h2>DB check</h2>
+    <p class="small">Terminal:</p>
+    <p><code>sqlite3 app.db</code></p>
+    <p><code>SELECT username, created_at FROM users;</code></p>
+  </div>
+</div>
+
+<script>
+  function tick(){
+    const now = new Date();
+    document.getElementById("clock").textContent =
+      now.toLocaleDateString() + " " + now.toLocaleTimeString();
+  }
+  tick();
+  setInterval(tick, 1000);
+</script>
+{% endblock %}
